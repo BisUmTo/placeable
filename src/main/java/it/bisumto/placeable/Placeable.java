@@ -8,6 +8,7 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.chunk.ChunkStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,8 @@ public class Placeable implements ModInitializer {
     }
 
     public static boolean isValidFloor(WorldView world, BlockPos pos){
+        if(world.getChunk(pos).getStatus() != ChunkStatus.FULL)
+            return false;
         return isValidFloor(world.getBlockState(pos.down()), world, pos.down());
     }
     public static boolean isValidFloor(BlockState floor, BlockView world, BlockPos pos){
