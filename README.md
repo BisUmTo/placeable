@@ -20,3 +20,6 @@ The available plants are:
 - Fern
 - Flowers
 - Grass
+- Saplings
+- Bamboo
+- Cocoa beens
