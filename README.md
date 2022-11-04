@@ -4,3 +4,22 @@
 <a href="https://www.curseforge.com/minecraft/mc-mods/placeable"><img src="http://cf.way2muchnoise.eu/full_663967_downloads.svg" alt="CurseForge downloads" width="118" height="20" /></a></p>
 
 This small fabric mod allows you to place vegetation on almost all blocks.
+
+# How to install
+
+Download `.jar` file from [https://www.curseforge.com/minecraft/mc-mods/placeable](https://www.curseforge.com/minecraft/mc-mods/placeable)
+
+Put the file in mod folder
+
+# How to use
+
+When you right click on a floor block, with some plant it'll be plants
+
+The available plants are:
+- Deadbrush
+- Fern
+- Flowers
+- Grass
+- Saplings
+- Bamboo
+- Cocoa beens
