@@ -1,19 +1,18 @@
 package it.bisumto.placeable.mixin;
 
 import it.bisumto.placeable.Placeable;
-import net.minecraft.block.*;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BambooBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -21,25 +20,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BambooBlockMixin {
 
     // PLACEABLE
-    @Inject(method = "canPlaceAt", at = @At("HEAD"), cancellable = true)
-    public void canPlantAnywhere(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if(Placeable.isValidFloor(world, pos))
+    @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
+    public void canPlantAnywhere(BlockState state, LevelReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if (Placeable.isValidFloor(world, pos))
             cir.setReturnValue(true);
     }
 
     // PREVENT GROWING
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
-    public void randomTickMixin(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        BlockState floor = world.getBlockState(pos.down());
-        if (!floor.isIn(BlockTags.BAMBOO_PLANTABLE_ON))
+    public void randomTickMixin(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci) {
+        BlockState floor = world.getBlockState(pos.below());
+        if (!floor.is(BlockTags.BAMBOO_PLANTABLE_ON))
             ci.cancel();
     }
 
     // PLACEMENT STATE
-    @Inject(method = "getPlacementState", at = @At("TAIL"), cancellable = true)
-    public void getPlacementStateMixin(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        if (Placeable.isValidFloor(ctx.getWorld(), ctx.getBlockPos()))
-            cir.setReturnValue(Blocks.BAMBOO_SAPLING.getDefaultState());
+    @Inject(method = "getStateForPlacement", at = @At("TAIL"), cancellable = true)
+    public void getPlacementStateMixin(BlockPlaceContext ctx, CallbackInfoReturnable<BlockState> cir) {
+        if (Placeable.isValidFloor(ctx.getLevel(), ctx.getClickedPos()))
+            cir.setReturnValue(Blocks.BAMBOO_SAPLING.defaultBlockState());
     }
 
 
