@@ -1,19 +1,18 @@
 package it.bisumto.placeable.mixin;
 
 import it.bisumto.placeable.Placeable;
-import net.minecraft.block.*;
+import net.minecraft.block.BambooBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -23,7 +22,7 @@ public class BambooBlockMixin {
     // PLACEABLE
     @Inject(method = "canPlaceAt", at = @At("HEAD"), cancellable = true)
     public void canPlantAnywhere(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if(Placeable.isValidFloor(world, pos))
+        if (Placeable.isValidFloor(world, pos))
             cir.setReturnValue(true);
     }
 
@@ -41,6 +40,5 @@ public class BambooBlockMixin {
         if (Placeable.isValidFloor(ctx.getWorld(), ctx.getBlockPos()))
             cir.setReturnValue(Blocks.BAMBOO_SAPLING.getDefaultState());
     }
-
 
 }

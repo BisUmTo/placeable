@@ -1,34 +1,26 @@
 package it.bisumto.placeable.mixin;
 
-import it.bisumto.placeable.Placeable;
-import net.minecraft.block.BambooSaplingBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CropBlock;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BambooSaplingBlock.class)
-public class BambooSaplingBlockMixin {
-
-    // PLACEABLE
-    @Inject(method = "canPlaceAt", at = @At("HEAD"), cancellable = true)
-    public void canPlantAnywhere(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (Placeable.isValidFloor(world, pos))
-            cir.setReturnValue(true);
-    }
+@Mixin(CropBlock.class)
+public class CropBlockMixin {
 
     // PREVENT GROWING
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     public void randomTickMixin(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockState floor = world.getBlockState(pos.down());
-        if (!floor.isIn(BlockTags.BAMBOO_PLANTABLE_ON))
+        if (!floor.isOf(Blocks.FARMLAND))
             ci.cancel();
     }
 

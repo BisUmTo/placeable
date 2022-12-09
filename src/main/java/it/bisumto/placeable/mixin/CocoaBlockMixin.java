@@ -1,12 +1,12 @@
 package it.bisumto.placeable.mixin;
 
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CocoaBlock;
+import net.minecraft.block.SideShapeType;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,9 +21,9 @@ public class CocoaBlockMixin {
 
     // PLACEABLE
     @Inject(method = "canPlaceAt", at = @At("HEAD"), cancellable = true)
-    public void canPlantAnywhere(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
+    public void canPlantAnywhere(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos.offset(state.get(FACING)));
-        if(blockState.isSideSolid(world, pos, state.get(FACING), SideShapeType.RIGID))
+        if (blockState.isSideSolid(world, pos, state.get(FACING), SideShapeType.RIGID))
             cir.setReturnValue(true);
     }
 
