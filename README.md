@@ -23,3 +23,4 @@ The available plants are:
 - Saplings
 - Bamboo
 - Cocoa beens
+- Crops
