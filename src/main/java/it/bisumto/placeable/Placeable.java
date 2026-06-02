@@ -1,14 +1,14 @@
 package it.bisumto.placeable;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +20,12 @@ public class Placeable implements ModInitializer {
         LOGGER.info("Mod loaded");
     }
 
-    public static boolean isValidFloor(WorldView world, BlockPos pos){
-        if(world.getChunk(pos).getStatus() != ChunkStatus.FULL)
+    public static boolean isValidFloor(LevelReader world, BlockPos pos){
+        if(world.getChunk(pos).getPersistedStatus() != ChunkStatus.FULL)
             return false;
-        return isValidFloor(world.getBlockState(pos.down()), world, pos.down());
+        return isValidFloor(world.getBlockState(pos.below()), world, pos.below());
     }
-    public static boolean isValidFloor(BlockState floor, BlockView world, BlockPos pos){
-        return Block.hasTopRim(world, pos) || floor.isIn(BlockTags.LEAVES) || floor.isOf(Blocks.DIRT_PATH);
+    public static boolean isValidFloor(BlockState floor, BlockGetter world, BlockPos pos){
+        return Block.canSupportRigidBlock(world, pos) || floor.is(BlockTags.LEAVES) || floor.is(Blocks.DIRT_PATH);
     }
 }
